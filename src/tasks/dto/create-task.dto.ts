@@ -1,5 +1,5 @@
-import { Task } from '../task.model';
 import { IsNotEmpty } from 'class-validator';
+import { Task } from '../task.entity';
 
 export class CreateTaskDto {
   @IsNotEmpty()
