@@ -3,21 +3,27 @@ import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { User } from '../auth/user.entity';
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
-  createTask = async ({ description, title }: CreateTaskDto) => {
+  async createTask({ description, title }: CreateTaskDto, user: User) {
     const task = new Task();
     task.status = TaskStatus.OPEN;
     task.title = title;
     task.description = description;
+    task.user = user;
     await task.save();
 
+    delete task.user;
     return task;
-  };
+  }
 
-  getTasks = async ({ search, status }: GetTasksFilterDto) => {
-    const query = this.createQueryBuilder('task');
+  async getTasks({ search, status }: GetTasksFilterDto, { id }: User) {
+    const query = this.createQueryBuilder('task').andWhere(
+      'task.user.id = :id',
+      { id },
+    );
 
     if (status) query.andWhere('task.status = :status', { status });
 
@@ -28,5 +34,5 @@ export class TaskRepository extends Repository<Task> {
       );
 
     return await query.getMany();
-  };
+  }
 }

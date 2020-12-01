@@ -1,14 +1,23 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { hash } from 'bcrypt';
+import { Task } from '../tasks/task.entity';
 
 @Entity()
 export class User extends BaseEntity {
-  constructor(username?: string, password?: string) {
+  constructor(username?: string, password?: string, salt?: string) {
     super();
     this.username = username;
     this.password = password;
+    this.salt = salt;
   }
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
@@ -16,4 +25,15 @@ export class User extends BaseEntity {
 
   @Column()
   password: string;
+
+  @Column()
+  salt: string;
+
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Task[];
+
+  async validatePassword(password: string) {
+    const userHash = await hash(password, this.salt);
+    return userHash === this.password;
+  }
 }

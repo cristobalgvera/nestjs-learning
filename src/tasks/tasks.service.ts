@@ -9,6 +9,7 @@ import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { User } from '../auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -17,35 +18,43 @@ export class TasksService {
     private taskRepository: TaskRepository,
   ) {}
 
-  getTasks = async (filterDto: GetTasksFilterDto) => {
-    return await this.taskRepository.getTasks(filterDto);
+  private readonly throwNotFoundException = (id: Task['id']) => {
+    throw new NotFoundException(`Task with ID: '${id}' was not found`);
   };
 
-  getTaskById = async (id: Task['id']) => {
+  async getTasks(filterDto: GetTasksFilterDto, user: User) {
+    return await this.taskRepository.getTasks(filterDto, user);
+  }
+
+  async getTaskById(id: Task['id'], user: User) {
     try {
-      return await this.taskRepository.findOneOrFail(id);
+      const task = await this.taskRepository.findOneOrFail({
+        where: { id, user },
+      });
+      delete task.user;
+      return task;
     } catch (error) {
-      throw new NotFoundException(`Task with ID: '${id}' was not found`, error);
+      this.throwNotFoundException(id);
     }
-  };
+  }
 
-  createTask = async (createTaskDto: CreateTaskDto) => {
+  async createTask(createTaskDto: CreateTaskDto, user: User) {
     try {
-      return await this.taskRepository.createTask(createTaskDto);
+      return await this.taskRepository.createTask(createTaskDto, user);
     } catch (error) {
-      throw new BadRequestException(null, error);
+      throw new BadRequestException();
     }
-  };
+  }
 
-  updateTaskStatus = async ({ id, status }: UpdateTaskDto) => {
-    const task = await this.getTaskById(id);
+  async updateTaskStatus({ id, status }: UpdateTaskDto, user: User) {
+    const task = await this.getTaskById(id, user);
     task.status = status;
     return await task.save();
-  };
+  }
 
-  deleteTaskById = async (id: Task['id']) => {
-    const { affected } = await this.taskRepository.delete(id);
-    if (affected === 0)
-      throw new NotFoundException(`Task with ID: '${id}' was not found`);
-  };
+  async deleteTaskById(id: Task['id'], user: User) {
+    const { affected } = await this.taskRepository.delete({ id, user });
+
+    if (affected === 0) this.throwNotFoundException(id);
+  }
 }
