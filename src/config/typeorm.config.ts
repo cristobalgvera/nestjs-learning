@@ -9,6 +9,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: 'task-management',
   entities: [__dirname + '/../**/*.entity.js'],
   synchronize: true,
-  logger: 'advanced-console',
-  logging: true,
+  // logger: 'advanced-console',
+  // logging: true,
 };
