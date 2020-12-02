@@ -5,6 +5,10 @@ import { JwtPayload } from './interfaces/jwt.payload';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { UnauthorizedException } from '@nestjs/common';
+import * as config from 'config';
+
+const { secret } = config.get<any>('jwt');
+const { JWT_SECRET } = process.env;
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -13,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'topSecret51',
+      secretOrKey: JWT_SECRET || secret,
     });
   }
 
