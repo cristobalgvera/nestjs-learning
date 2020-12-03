@@ -1,0 +1,7 @@
+server:
+  port: 8081
+
+database:
+  type: 'postgres'
+  port: 5432
+  database: 'jwt-authentication'

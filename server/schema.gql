@@ -1,0 +1,12 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Mutation {
+  """Register a new user in database"""
+  register(email: String!, password: String!): Boolean!
+}
+
+type Query {
+  hello: String!
+}
