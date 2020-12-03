@@ -5,3 +5,6 @@ database:
   type: 'postgres'
   port: 5432
   database: 'jwt-authentication'
+
+jwt:
+  expiresIn: 3600

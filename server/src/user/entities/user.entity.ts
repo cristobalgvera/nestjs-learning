@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IsEmail, MinLength } from 'class-validator';
 
 @ObjectType({ description: 'Common application user' })
 @Entity()
@@ -12,12 +13,14 @@ export class User extends BaseEntity {
 
   @Field(() => Int)
   @PrimaryGeneratedColumn()
-  id: number;
+  readonly id: number;
 
   @Field({ name: 'email', description: 'User email' })
-  @Column()
-  email: string;
+  @Column({ unique: true })
+  @IsEmail()
+  readonly email: string;
 
   @Column()
-  password: string;
+  @MinLength(6)
+  readonly password: string;
 }

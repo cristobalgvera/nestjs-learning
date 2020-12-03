@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './config/typeorm.config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UserModule } from './user/user.module';
       sortSchema: true,
     }),
     UserModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

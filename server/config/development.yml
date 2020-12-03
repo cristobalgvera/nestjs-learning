@@ -3,3 +3,6 @@ database:
   username: 'postgres'
   password: 'admin'
   synchronize: true
+
+jwt:
+  secret: 'Zer2$6Y%!!.48!==)dw$%'

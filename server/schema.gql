@@ -2,13 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""Successful validateUser response"""
+type LoginResponseType {
+  accessToken: String!
+}
+
 type Mutation {
+  """Login with username and password"""
+  login(
+    """User email"""
+    email: String!
+    password: String!
+  ): LoginResponseType!
+
   """Register a new user in database"""
   register(
     """User email"""
     email: String!
-
-    """User password"""
     password: String!
   ): User!
 }
