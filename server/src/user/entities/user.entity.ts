@@ -1,9 +1,15 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@ObjectType()
+@ObjectType({ description: 'Common application user' })
 @Entity()
 export class User extends BaseEntity {
+  constructor(email?: string, password?: string) {
+    super();
+    this.email = email;
+    this.password = password;
+  }
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
@@ -12,7 +18,6 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
-  @Field({ name: 'password', description: 'User password' })
   @Column()
   password: string;
 }

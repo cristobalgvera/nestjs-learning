@@ -4,9 +4,23 @@
 
 type Mutation {
   """Register a new user in database"""
-  register(email: String!, password: String!): Boolean!
+  register(
+    """User email"""
+    email: String!
+
+    """User password"""
+    password: String!
+  ): User!
 }
 
 type Query {
-  hello: String!
+  """Find all database users"""
+  users: [User!]!
+}
+
+"""Common application user"""
+type User {
+  """User email"""
+  email: String!
+  id: Int!
 }

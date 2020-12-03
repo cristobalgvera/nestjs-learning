@@ -4,4 +4,5 @@ export enum GLOBAL {
 
 export enum USER {
   RESOLVER = 'UserResolver',
+  REPOSITORY = 'UserRepository',
 }
