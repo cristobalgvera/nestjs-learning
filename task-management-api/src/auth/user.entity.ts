@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { Task } from '../tasks/task.entity';
 
 @Entity()

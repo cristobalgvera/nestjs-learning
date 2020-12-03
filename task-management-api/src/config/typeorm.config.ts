@@ -29,6 +29,4 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: RDS_DB_NAME || database,
   synchronize: TYPEORM_SYNC || synchronize,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
-  // logger: 'advanced-console',
-  // logging: true,
 };
