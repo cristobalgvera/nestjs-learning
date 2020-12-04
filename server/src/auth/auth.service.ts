@@ -8,6 +8,7 @@ import { compare, hash } from 'bcryptjs';
 import { JwtPayload } from './interfaces/jwt.payload';
 import { JwtService } from '@nestjs/jwt';
 import { LoginResponseType } from './dto/login-response.type';
+import { JwtValidation } from './interfaces/jwt.validation';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
     this.logger.debug(`Trying to log with user email: ${email} from database`);
     const user = await this.userRepository.findUser({ email });
 
-    this.logger.debug(`Checking password: ${user.password} - ${password}`);
+    this.logger.debug(`Checking password`);
     const isValid = await compare(password, user.password);
 
     if (!isValid) {
@@ -42,12 +43,27 @@ export class AuthService {
     }
 
     this.logger.debug('Generating JWT token');
-    const payload: JwtPayload = { userId: user.id, email: user.email };
+    const payload: JwtPayload = { id: user.id, email: user.email };
     const accessToken = this.jwtService.sign(payload);
 
     this.logger.debug(
       `JWT token generated with payload: ${JSON.stringify(payload)}`,
     );
     return { accessToken };
+  }
+
+  async validateJwtToken(accessToken: string): Promise<JwtValidation> {
+    this.logger.debug(
+      `Validating JWT access token ${accessToken.slice(0, 20)}...`,
+    );
+    try {
+      const { email }: JwtPayload = this.jwtService.verify(accessToken);
+      const user = await this.userRepository.findOne({ email });
+      if (user) delete user.password;
+      return { user };
+    } catch ({ name }) {
+      this.logger.warn(`Error while validating ${name}`);
+      return { error: name };
+    }
   }
 }

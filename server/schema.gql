@@ -4,6 +4,7 @@
 
 """Successful validateUser response"""
 type LoginResponseType {
+  """JWT personal access token"""
   accessToken: String!
 }
 
@@ -26,6 +27,7 @@ type Mutation {
 type Query {
   """Find all database users"""
   users: [User!]!
+  whoAmI: User!
 }
 
 """Common application user"""

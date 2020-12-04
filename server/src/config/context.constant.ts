@@ -14,3 +14,9 @@ export enum AUTH {
 export enum JWT {
   STRATEGY = 'JwtStrategy',
 }
+
+export enum GUARD {
+  GRAPHQL = 'GraphQLGuard',
+  HTTP = 'HttpGuard',
+  WEB_SOCKET = 'WebSocketGuard',
+}

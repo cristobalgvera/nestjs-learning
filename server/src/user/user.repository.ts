@@ -21,7 +21,7 @@ export class UserRepository extends Repository<User> {
       this.logger.debug(`Successful registration`);
       return newUser;
     } catch (error) {
-      this.logger.error(error.message);
+      this.logger.warn(error.message);
       if (error.code === '23505')
         throw new ConflictException('Username already exists');
       throw new InternalServerErrorException();

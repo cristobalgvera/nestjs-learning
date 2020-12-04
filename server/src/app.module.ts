@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
       sortSchema: true,
+      context: ({ req }) => ({ req }),
     }),
     UserModule,
     AuthModule,

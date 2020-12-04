@@ -22,5 +22,5 @@ export class User extends BaseEntity {
 
   @Column()
   @MinLength(6)
-  readonly password: string;
+  password: string;
 }
