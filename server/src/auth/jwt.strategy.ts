@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import * as config from 'config';
 import { JWT } from '../config/context.constant';
-import { JwtPayload } from './interfaces/jwt.payload';
+import { JwtPayload } from './interfaces';
 
 const { secret } = config.get('jwt');
 

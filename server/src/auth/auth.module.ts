@@ -6,10 +6,8 @@ import { AuthResolver } from './auth.resolver';
 import { JwtModule } from '@nestjs/jwt';
 import * as config from 'config';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
-import { GraphqlAuthGuard } from './guards/graphql-auth.guard';
-import { HttpAuthGuard } from './guards/http-auth.guard';
-import { WebSocketAuthGuard } from './guards/web-socket-auth.guard';
+import { GraphqlAuthGuard, WebSocketAuthGuard, HttpAuthGuard } from './guards';
+import { AuthController } from './auth.controller';
 
 const { secret, expiresIn } = config.get('jwt');
 
@@ -32,5 +30,6 @@ const { secret, expiresIn } = config.get('jwt');
     WebSocketAuthGuard,
   ],
   exports: [GraphqlAuthGuard, HttpAuthGuard, WebSocketAuthGuard, AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

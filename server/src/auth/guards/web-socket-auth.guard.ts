@@ -35,7 +35,7 @@ export class WebSocketAuthGuard
       throw new BadRequestException('Authentication token not found.');
     }
 
-    const { error } = await this.authService.validateJwtToken(accessToken);
+    const { error } = await this.authService.validateJwtAccessToken(accessToken);
 
     if (error) throw new UnauthorizedException(error);
     return true;

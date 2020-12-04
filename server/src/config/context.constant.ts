@@ -20,3 +20,10 @@ export enum GUARD {
   HTTP = 'HttpGuard',
   WEB_SOCKET = 'WebSocketGuard',
 }
+
+export enum DECORATOR {
+  CURRENT_USER = 'CurrentUserDecorator',
+  HTTP_CONTEXT = 'HttpContextDecorator',
+  GRAPHQL_HTTP_CONTEXT = 'GraphQLHttpContextDecorator',
+  COOKIES = 'CookiesDecorator',
+}

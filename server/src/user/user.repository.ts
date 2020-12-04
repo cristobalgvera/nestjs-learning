@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { User } from './entities/user.entity';
-import { RegisterUserArgs } from './dto/register-user.args';
+import { User } from './entities';
+import { FindUserArgs, RegisterUserArgs } from './dto';
 import {
   BadRequestException,
   ConflictException,
@@ -8,7 +8,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { USER } from '../config/context.constant';
-import { FindUserArgs } from './dto/find-user.args';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {

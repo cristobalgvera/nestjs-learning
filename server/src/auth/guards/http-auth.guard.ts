@@ -28,6 +28,7 @@ export class HttpAuthGuard extends AuthGuard('jwt') implements CanActivate {
       this.logger.warn(`There is no JWT access token, access denied`);
       throw new BadRequestException('Authorization header not found.');
     }
+
     const [type, accessToken] = authHeader.split(' ');
     if (type !== 'Bearer') {
       this.logger.warn(`There is no Bearer type token, access denied`);
@@ -36,7 +37,7 @@ export class HttpAuthGuard extends AuthGuard('jwt') implements CanActivate {
       );
     }
 
-    const { error } = await this.authService.validateJwtToken(accessToken);
+    const { error } = await this.authService.validateJwtAccessToken(accessToken);
 
     if (error) throw new UnauthorizedException(error);
     return true;

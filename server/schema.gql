@@ -25,6 +25,8 @@ type Mutation {
 }
 
 type Query {
+  hi: String!
+
   """Find all database users"""
   users: [User!]!
   whoAmI: User!

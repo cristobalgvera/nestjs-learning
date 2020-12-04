@@ -6,3 +6,4 @@ database:
 
 jwt:
   secret: 'Zer2$6Y%!!.48!==)dw$%'
+  refreshSecret: 'Skdify83y7!!.-!##=?D'

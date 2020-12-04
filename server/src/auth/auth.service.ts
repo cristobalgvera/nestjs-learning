@@ -1,14 +1,24 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { AUTH } from '../config/context.constant';
-import { LoginUserArgs } from '../user/dto/login-user.args';
+import { LoginUserArgs, RegisterUserArgs } from '../user/dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user/user.repository';
-import { RegisterUserArgs } from '../user/dto/register-user.args';
 import { compare, hash } from 'bcryptjs';
-import { JwtPayload } from './interfaces/jwt.payload';
+import { JwtPayload, JwtValidation, HttpContext } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
-import { LoginResponseType } from './dto/login-response.type';
-import { JwtValidation } from './interfaces/jwt.validation';
+import { LoginResponseType } from './dto';
+import { User } from '../user/entities';
+import * as config from 'config';
+
+const { refreshExpiresIn, refreshSecret } = config.get('jwt');
+const {
+  cookie: { name },
+} = config.get('storage');
 
 @Injectable()
 export class AuthService {
@@ -30,40 +40,113 @@ export class AuthService {
     });
   }
 
-  async login({ password, email }: LoginUserArgs): Promise<LoginResponseType> {
+  async login(
+    { password, email }: LoginUserArgs,
+    httpContext: HttpContext,
+  ): Promise<LoginResponseType> {
     this.logger.debug(`Trying to log with user email: ${email} from database`);
     const user = await this.userRepository.findUser({ email });
 
     this.logger.debug(`Checking password`);
     const isValid = await compare(password, user.password);
 
+    delete user.password;
+
     if (!isValid) {
       this.logger.warn('Bad credentials');
       throw new BadRequestException('Invalid credentials');
     }
 
-    this.logger.debug('Generating JWT token');
-    const payload: JwtPayload = { id: user.id, email: user.email };
-    const accessToken = this.jwtService.sign(payload);
+    const payload: JwtPayload = {
+      tokenVersion: user.tokenVersion,
+      email: user.email,
+    };
+    const accessToken = this.createAccessToken(payload);
+
+    this.appendToContext(user, { res: httpContext.res });
 
     this.logger.debug(
-      `JWT token generated with payload: ${JSON.stringify(payload)}`,
+      `JWT tokens generated with payload: ${JSON.stringify(payload)}`,
     );
     return { accessToken };
   }
 
-  async validateJwtToken(accessToken: string): Promise<JwtValidation> {
+  async validateJwtRefreshToken(accessToken: string, httpContext: HttpContext) {
+    this.logger.debug(
+      `Validating JWT refresh token ${accessToken.slice(0, 20)}...`,
+    );
+    return this.validateJwtToken(accessToken, httpContext, true);
+  }
+
+  async validateJwtAccessToken(accessToken: string, httpContext?: HttpContext) {
     this.logger.debug(
       `Validating JWT access token ${accessToken.slice(0, 20)}...`,
     );
+    return this.validateJwtToken(accessToken, httpContext);
+  }
+
+  private async validateJwtToken(
+    accessToken: string,
+    httpContext?: HttpContext,
+    refresh?: boolean,
+  ) {
     try {
-      const { email }: JwtPayload = this.jwtService.verify(accessToken);
-      const user = await this.userRepository.findOne({ email });
-      if (user) delete user.password;
+      let jwtPayload: JwtPayload;
+      if (refresh)
+        jwtPayload = this.jwtService.verify(accessToken, {
+          secret: refreshSecret,
+        });
+      else jwtPayload = this.jwtService.verify(accessToken);
+      const { tokenVersion, email } = jwtPayload;
+
+      this.logger.debug(`Getting user email: ${email} from database`);
+      const user = await this.userRepository.findOneOrFail({ email });
+      delete user.password;
+
+      this.logger.debug(`Validating token version`);
+      if (tokenVersion !== user.tokenVersion) this.revokeTokens();
+
+      if (httpContext) this.appendToContext(user, httpContext);
       return { user };
-    } catch ({ name }) {
-      this.logger.warn(`Error while validating ${name}`);
-      return { error: name };
+    } catch (error) {
+      this.logger.warn(`Error while validating: ${error.name}`);
+      return { error: error.name };
     }
+  }
+
+  private revokeTokens() {
+    // TODO: Revoke token stuffs
+    return null;
+  }
+
+  private appendToContext(user: User, { req, res }: HttpContext) {
+    if (req) {
+      this.logger.debug('Appending user to context');
+      req.user = user;
+    }
+    if (res) {
+      const payload: JwtPayload = {
+        email: user.email,
+        tokenVersion: user.tokenVersion,
+      };
+      const cookie = this.createRefreshToken(payload);
+      this.logger.debug('Creating cookie with JWT refresh token');
+      res.cookie(name, cookie, {
+        httpOnly: true,
+      });
+    }
+  }
+
+  private createAccessToken(payload: JwtPayload) {
+    this.logger.debug('Creating JWT access token');
+    return this.jwtService.sign(payload);
+  }
+
+  private createRefreshToken(payload: JwtPayload) {
+    this.logger.debug('Creating JWT refresh token');
+    return this.jwtService.sign(payload, {
+      expiresIn: refreshExpiresIn,
+      secret: refreshSecret,
+    });
   }
 }

@@ -7,4 +7,9 @@ database:
   database: 'jwt-authentication'
 
 jwt:
-  expiresIn: 3600
+  expiresIn: '15m'
+  refreshExpiresIn: '7d'
+
+storage:
+  cookie:
+    name: 'JfqI23kfh!!.-".3d'
