@@ -99,6 +99,8 @@ export class AuthService {
         throw new BadRequestException('Invalid credentials');
 
       if (httpContext) await this.appendToContext(user, httpContext);
+      delete user.tokenVersion;
+
       return { user };
     } catch (error) {
       let err: string;
