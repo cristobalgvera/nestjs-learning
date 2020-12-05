@@ -22,11 +22,12 @@ type Mutation {
     email: String!
     password: String!
   ): User!
+
+  """Testing mutation to revoke refresh JWT"""
+  revokeRefreshTokensForUser(id: Float!): Boolean!
 }
 
 type Query {
-  hi: String!
-
   """Find all database users"""
   users: [User!]!
   whoAmI: User!

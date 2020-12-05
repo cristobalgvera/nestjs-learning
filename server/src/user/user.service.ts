@@ -16,4 +16,8 @@ export class UserService {
     this.logger.debug('Getting all users from database');
     return this.userRepository.find();
   }
+
+  async incrementTokenVersion(id: number) {
+    return this.userRepository.increment({ id }, 'tokenVersion', 1);
+  }
 }

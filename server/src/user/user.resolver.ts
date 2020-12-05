@@ -1,4 +1,4 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from './entities';
 import { UserService } from './user.service';
 import { UseGuards } from '@nestjs/common';
@@ -10,14 +10,22 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => [User], { description: 'Find all database users' })
-  @UseGuards(GraphqlAuthGuard)
   users() {
     return this.userService.findAll();
   }
 
-  @Query(() => String)
+  @Query(() => User)
   @UseGuards(GraphqlAuthGuard)
-  hi(@CurrentUser() { email }: User) {
-    return `Hi ${email}`;
+  whoAmI(@CurrentUser() user: User) {
+    return user;
+  }
+
+  // Testing purpose
+  @Mutation(() => Boolean, {
+    description: 'Testing mutation to revoke refresh JWT',
+  })
+  async revokeRefreshTokensForUser(@Args('id') id: number) {
+    const { affected } = await this.userService.incrementTokenVersion(id);
+    return !!affected;
   }
 }

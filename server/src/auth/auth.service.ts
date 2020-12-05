@@ -1,15 +1,10 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { AUTH } from '../config/context.constant';
 import { LoginUserArgs, RegisterUserArgs } from '../user/dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user/user.repository';
 import { compare, hash } from 'bcryptjs';
-import { JwtPayload, JwtValidation, HttpContext } from './interfaces';
+import { HttpContext, JwtPayload } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { LoginResponseType } from './dto';
 import { User } from '../user/entities';
@@ -63,7 +58,7 @@ export class AuthService {
     };
     const accessToken = this.createAccessToken(payload);
 
-    this.appendToContext(user, { res: httpContext.res });
+    await this.appendToContext(user, { res: httpContext.res });
 
     this.logger.debug(
       `JWT tokens generated with payload: ${JSON.stringify(payload)}`,
@@ -72,16 +67,12 @@ export class AuthService {
   }
 
   async validateJwtRefreshToken(accessToken: string, httpContext: HttpContext) {
-    this.logger.debug(
-      `Validating JWT refresh token ${accessToken.slice(0, 20)}...`,
-    );
+    this.logger.debug(`Validating JWT refresh token`);
     return this.validateJwtToken(accessToken, httpContext, true);
   }
 
   async validateJwtAccessToken(accessToken: string, httpContext?: HttpContext) {
-    this.logger.debug(
-      `Validating JWT access token ${accessToken.slice(0, 20)}...`,
-    );
+    this.logger.debug(`Validating JWT access token`);
     return this.validateJwtToken(accessToken, httpContext);
   }
 
@@ -104,22 +95,21 @@ export class AuthService {
       delete user.password;
 
       this.logger.debug(`Validating token version`);
-      if (tokenVersion !== user.tokenVersion) this.revokeTokens();
+      if (tokenVersion !== user.tokenVersion)
+        throw new BadRequestException('Invalid credentials');
 
-      if (httpContext) this.appendToContext(user, httpContext);
+      if (httpContext) await this.appendToContext(user, httpContext);
       return { user };
     } catch (error) {
-      this.logger.warn(`Error while validating: ${error.name}`);
-      return { error: error.name };
+      let err: string;
+      if (error.name === 'Error') err = error.message;
+      else err = error.name;
+      this.logger.warn(`Error while validating: ${err}`);
+      return { error: err };
     }
   }
 
-  private revokeTokens() {
-    // TODO: Revoke token stuffs
-    return null;
-  }
-
-  private appendToContext(user: User, { req, res }: HttpContext) {
+  private async appendToContext(user: User, { req, res }: HttpContext) {
     if (req) {
       this.logger.debug('Appending user to context');
       req.user = user;
@@ -129,11 +119,20 @@ export class AuthService {
         email: user.email,
         tokenVersion: user.tokenVersion,
       };
-      const cookie = this.createRefreshToken(payload);
+      const cookie = this.createRefreshToken({
+        ...payload,
+        tokenVersion: payload.tokenVersion + 1,
+      });
       this.logger.debug('Creating cookie with JWT refresh token');
       res.cookie(name, cookie, {
         httpOnly: true,
       });
+      this.logger.debug(`Updating tokenVersion in database`);
+      await this.userRepository.increment(
+        { email: payload.email },
+        'tokenVersion',
+        1,
+      );
     }
   }
 
