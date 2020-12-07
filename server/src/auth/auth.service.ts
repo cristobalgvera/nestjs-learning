@@ -53,7 +53,7 @@ export class AuthService {
     }
 
     const payload: JwtPayload = {
-      tokenVersion: user.tokenVersion,
+      tokenVersion: user.tokenVersion + 1,
       email: user.email,
     };
     const accessToken = this.createAccessToken(payload);

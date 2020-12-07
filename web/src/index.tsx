@@ -1,18 +1,14 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Routes from './components/Routes/Routes';
 import reportWebVitals from './reportWebVitals';
-
-const client = new ApolloClient({
-    uri: 'http://localhost:8081/graphql',
-    cache: new InMemoryCache(),
-});
+import { apolloClient } from './config/apollo-client';
 
 ReactDOM.render(
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
         <React.StrictMode>
-            <App/>
+            <Routes/>
         </React.StrictMode>
     </ApolloProvider>,
     document.getElementById('root'),
