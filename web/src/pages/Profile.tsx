@@ -9,7 +9,7 @@ const Profile = () => {
             {error && <p>{error.message}</p>}
             {loading
                 ? <p>Loading...</p>
-                : <p>Hi, {data?.whoAmI.email}!</p>}
+                : <p>Hi, {data?.whoAmI.email || 'dude'}!</p>}
         </div>
     );
 }

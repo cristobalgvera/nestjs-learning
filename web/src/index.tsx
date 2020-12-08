@@ -1,14 +1,14 @@
 import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './components/Routes/Routes';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { apolloClient } from './config/apollo-client';
 
 ReactDOM.render(
     <ApolloProvider client={apolloClient}>
         <React.StrictMode>
-            <Routes/>
+            <App/>
         </React.StrictMode>
     </ApolloProvider>,
     document.getElementById('root'),

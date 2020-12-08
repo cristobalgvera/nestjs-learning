@@ -106,7 +106,7 @@ export class AuthService {
       let err: string;
       if (error.name === 'Error') err = error.message;
       else err = error.name;
-      this.logger.warn(`Error while validating: ${err}`);
+      this.logger.warn(`Error while validating: ${error.name}`);
       return { error: err };
     }
   }
