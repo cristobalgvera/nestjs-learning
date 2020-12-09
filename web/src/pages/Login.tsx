@@ -35,10 +35,9 @@ const Login = () => {
         });
 
         if (response && response.data) {
-            setAccessToken(response.data?.login.accessToken);
+            setAccessToken(response.data.login.accessToken);
             history.push(ROUTE.PROFILE);
         }
-
     };
 
     return (

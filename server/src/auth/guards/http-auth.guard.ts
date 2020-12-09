@@ -21,6 +21,15 @@ export class HttpAuthGuard extends AuthGuard('jwt') implements CanActivate {
   async canActivate(context: ExecutionContext) {
     this.logger.debug(`Guarding JWT authorization`);
 
+    console.log(
+      '[HTTP Guard] Cookies',
+      context.switchToHttp().getRequest().cookies,
+    );
+    console.log(
+      '[HTTP Guard] Headers',
+      context.switchToHttp().getRequest().headers,
+    );
+
     const authHeader = context.switchToHttp().getRequest().headers
       .authorization as string;
 
@@ -37,7 +46,9 @@ export class HttpAuthGuard extends AuthGuard('jwt') implements CanActivate {
       );
     }
 
-    const { error } = await this.authService.validateJwtAccessToken(accessToken);
+    const { error } = await this.authService.validateJwtAccessToken(
+      accessToken,
+    );
 
     if (error) throw new UnauthorizedException(error);
     return true;

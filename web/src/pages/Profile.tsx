@@ -2,7 +2,7 @@ import React from 'react';
 import { useWhoAmIQuery } from '../graphql/generated/hooks';
 
 const Profile = () => {
-    const { data, loading, error } = useWhoAmIQuery();
+    const { data, loading, error } = useWhoAmIQuery({ fetchPolicy: 'network-only' });
 
     return (
         <div>
@@ -12,7 +12,6 @@ const Profile = () => {
                 : <p>Hi, {data?.whoAmI.email || 'dude'}!</p>}
         </div>
     );
-}
-;
+};
 
 export default Profile;

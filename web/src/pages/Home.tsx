@@ -1,12 +1,7 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { useUsersQuery } from '../graphql/generated/hooks';
 
-interface OwnProps {
-}
-
-type Props = OwnProps;
-
-const Home: FunctionComponent<Props> = ( props ) => {
+const Home = () => {
     const { data, loading, error } = useUsersQuery({ fetchPolicy: 'network-only' });
 
     const fetchData = () => {

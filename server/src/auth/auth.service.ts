@@ -58,7 +58,7 @@ export class AuthService {
     };
     const accessToken = this.createAccessToken(payload);
 
-    await this.appendToContext(user, { res: httpContext.res });
+    await this.appendToContext(user, httpContext);
 
     this.logger.debug(
       `JWT tokens generated with payload: ${JSON.stringify(payload)}`,
@@ -83,6 +83,7 @@ export class AuthService {
   ) {
     try {
       let jwtPayload: JwtPayload;
+      console.log('[UserService] Access Token', accessToken);
       if (refresh)
         jwtPayload = this.jwtService.verify(accessToken, {
           secret: refreshSecret,
@@ -119,16 +120,16 @@ export class AuthService {
     if (res) {
       const payload: JwtPayload = {
         email: user.email,
-        tokenVersion: user.tokenVersion,
+        tokenVersion: user.tokenVersion + 1,
       };
-      const cookie = this.createRefreshToken({
-        ...payload,
-        tokenVersion: payload.tokenVersion + 1,
-      });
+      const cookie = this.createRefreshToken(payload);
       this.logger.debug('Creating cookie with JWT refresh token');
       res.cookie(name, cookie, {
         httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 6.048e8,
       });
+      console.log('[AuthService] Headers', res.getHeaders());
       this.logger.debug(`Updating tokenVersion in database`);
       await this.userRepository.increment(
         { email: payload.email },
