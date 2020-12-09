@@ -1,11 +1,11 @@
-function Home() {
+function List() {
     return (
         <div>
             <h1>
-                Home Page!
+                List
             </h1>
         </div>
     );
 }
 
-export default Home;
+export default List;
