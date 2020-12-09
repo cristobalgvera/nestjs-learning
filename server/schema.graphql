@@ -1,0 +1,108 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Mutation {
+  """Create new product with a category associated"""
+  createProduct(
+    """Product image url"""
+    imageUrl: String = ""
+
+    """Product measurement"""
+    measure: String
+
+    """Product name"""
+    name: String!
+
+    """Product price"""
+    price: Int!
+
+    """Product category ID"""
+    productCategoryId: ID!
+  ): Product!
+
+  """Create new category for products"""
+  createProductCategory(
+    """Category name"""
+    name: String!
+  ): ProductCategory!
+
+  """Delete an existing product category"""
+  deleteProductCategory(
+    """Category ID"""
+    id: ID!
+  ): Boolean!
+  removeProduct(id: Int!): Product!
+  updateProduct(
+    id: Int!
+
+    """Product image url"""
+    imageUrl: String = ""
+
+    """Product measurement"""
+    measure: String
+
+    """Product name"""
+    name: String
+
+    """Product price"""
+    price: Int
+
+    """Product category ID"""
+    productCategoryId: ID
+  ): Product!
+
+  """Update an existing product category"""
+  updateProductCategory(
+    id: ID!
+
+    """Category name"""
+    name: String
+  ): Boolean!
+}
+
+type Product {
+  """Product category"""
+  category: ProductCategory!
+
+  """Product ID"""
+  id: ID!
+
+  """Product image url"""
+  imageUrl: String
+
+  """Product measurement"""
+  measure: String
+
+  """Product name"""
+  name: String!
+
+  """Product price"""
+  price: Int!
+}
+
+type ProductCategory {
+  """Category ID"""
+  id: ID!
+
+  """Category name"""
+  name: String!
+
+  """All product from specific category"""
+  products: [Product!]!
+}
+
+type Query {
+  """Find all categories with his data"""
+  findProductCategories: [ProductCategory!]!
+
+  """Find all products of one category"""
+  findProductCategory(
+    """Category ID"""
+    id: ID!
+  ): ProductCategory!
+  product(id: Int!): Product!
+
+  """Find all products from database"""
+  products: [Product!]!
+}

@@ -1,0 +1,7 @@
+server:
+  port: 8081
+
+database:
+  type: 'postgres' # Isn't being used
+  port: 5432
+  database: 'shopping-list'
