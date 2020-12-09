@@ -1,7 +1,7 @@
 import { AppState, AppStateActionType } from '../interfaces';
 import { updateState } from '../../shared/util/updateState';
 
-type Payload = AppStateActionType['payload'];
+type AppStatePayload = AppStateActionType['payload'];
 
 export const initialAppState: AppState = {
     user: {
@@ -18,11 +18,11 @@ export function appStateReducer( state: AppState, { type, payload }: AppStateAct
         case 'USER_LOGOUT':
             return userLogout(state);
         default:
-            throw new Error('Wrong action type');
+            throw new Error(`Error while reducing app state`);
     }
 }
 
-const userLogin = ( state: AppState, payload: Payload ) => {
+const userLogin = ( state: AppState, payload: AppStatePayload ) => {
     if (payload && 'user' in payload) {
         const { user } = payload;
         return updateState(state, { user });

@@ -3,24 +3,22 @@ import { ROUTES, userRoute } from './routes.path';
 import { useAppState } from '../../hooks';
 
 const Routes = () => {
-    const { data: { user }, logic: { login } } = useAppState();
+    const { data: { user: { username } } } = useAppState();
 
     return (
         <>
             <Link href={ROUTES.HOME}>
                 <a>Home</a>
             </Link>
-            {user.username !== '' ? (
-                <Link href={userRoute.profile(user.username)}>
+            {username !== '' ? (
+                <Link href={userRoute.profile(username)}>
                     <a>User</a>
                 </Link>
             ) : (
                 <Link href={ROUTES.SIGN_IN}>
                     <a>Sign in</a>
                 </Link>
-            )
-            }
-
+            )}
         </>
     );
 };

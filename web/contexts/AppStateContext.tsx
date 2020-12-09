@@ -1,10 +1,10 @@
 import { createContext, Dispatch, FunctionComponent, useReducer } from 'react';
-import { AppState } from '../store/interfaces';
+import { AppState, AppStateActionType } from '../store/interfaces';
 import { appStateReducer, initialAppState } from '../store/reducers';
 
 interface AppStateContext {
     appState: AppState;
-    dispatchAppState: Dispatch<any>
+    dispatchAppState: Dispatch<AppStateActionType>
 }
 
 export const AppStateContext = createContext<AppStateContext>({
@@ -13,7 +13,7 @@ export const AppStateContext = createContext<AppStateContext>({
     },
 });
 
-const AppStateContextProvider: FunctionComponent = ( { children } ) => {
+export const AppStateContextProvider: FunctionComponent = ( { children } ) => {
     const [appState, dispatchAppState] = useReducer(appStateReducer, initialAppState);
 
     return (
@@ -25,5 +25,3 @@ const AppStateContextProvider: FunctionComponent = ( { children } ) => {
         </AppStateContext.Provider>
     );
 };
-
-export default AppStateContextProvider;

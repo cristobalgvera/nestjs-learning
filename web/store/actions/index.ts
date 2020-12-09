@@ -1,3 +1,4 @@
 import * as AppStateActions from './appStateActions';
+import * as ShoppingListActions from './shoppingListActions';
 
-export { AppStateActions };
+export { AppStateActions, ShoppingListActions };

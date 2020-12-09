@@ -1,14 +1,14 @@
 import { AppProps } from 'next/app';
 import '../shared/styles/globals.scss';
 import Routes from '../components/Routes/Routes';
-import AppStateContextProvider from '../contexts/AppStateContext';
+import GeneralContextProvider from '../contexts/GeneralContextProvider';
 
 function App( { Component, pageProps }: AppProps ) {
     return (
-        <AppStateContextProvider>
+        <GeneralContextProvider>
             <Routes/>
             <Component {...pageProps}/>
-        </AppStateContextProvider>
+        </GeneralContextProvider>
     );
 }
 
