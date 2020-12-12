@@ -36,6 +36,7 @@ const initialProductInListState: ProductInList = {
     price: 0,
     amount: 0,
     checked: false,
+    category: undefined,
 };
 
 const addProduct = ( state: ShoppingList, payload: ShoppingListPayload ) => {
