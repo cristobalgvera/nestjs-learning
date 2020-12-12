@@ -27,14 +27,21 @@ type Mutation {
     name: String!
   ): ProductCategory!
 
+  """Delete an existing product"""
+  deleteProduct(
+    """Product ID"""
+    id: ID!
+  ): Boolean!
+
   """Delete an existing product category"""
   deleteProductCategory(
     """Category ID"""
     id: ID!
   ): Boolean!
-  removeProduct(id: Int!): Product!
+
+  """Update an existing product"""
   updateProduct(
-    id: Int!
+    id: ID!
 
     """Product image url"""
     imageUrl: String = ""
@@ -101,7 +108,12 @@ type Query {
     """Category ID"""
     id: ID!
   ): ProductCategory!
-  product(id: Int!): Product!
+
+  """Find one product"""
+  product(
+    """Product ID"""
+    id: ID!
+  ): Product!
 
   """Find all products from database"""
   products: [Product!]!

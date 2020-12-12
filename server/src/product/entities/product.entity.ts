@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductCategory } from '../../product-category/entities';
-import { IsAlphanumeric, IsNumber, IsString, IsUrl } from 'class-validator';
+import { IsNumber, IsString, IsUrl } from 'class-validator';
 
 @Entity()
 @ObjectType()
@@ -28,7 +28,7 @@ export class Product extends BaseEntity {
   price: number;
 
   @Column({ default: '' })
-  @IsAlphanumeric()
+  @IsString()
   @Field({ description: 'Product measurement', nullable: true })
   measure?: string;
 
