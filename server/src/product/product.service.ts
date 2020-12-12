@@ -15,8 +15,7 @@ export class ProductService {
     @InjectRepository(ProductRepository)
     private readonly productRepository: ProductRepository,
     private readonly productCategoryService: ProductCategoryService,
-  ) {
-  }
+  ) {}
 
   async createOne(createProductArgs: CreateProductArgs) {
     this.logger.debug(`Creating product name: ${createProductArgs.name}`);
@@ -60,10 +59,7 @@ export class ProductService {
     const { affected } = await this.productRepository.delete(id);
 
     if (!!affected) this.logger.debug(`Successful transaction`);
-    else
-      this.logger.debug(
-        `There is no product with ID: ${id} in database`,
-      );
+    else this.logger.debug(`There is no product with ID: ${id} in database`);
 
     return !!affected;
   }

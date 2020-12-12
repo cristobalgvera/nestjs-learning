@@ -1,0 +1,13 @@
+query Products {
+    products {
+        id
+        name
+        measure
+        price
+        imageUrl
+        category {
+            id
+            name
+        }
+    }
+}

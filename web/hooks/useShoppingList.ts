@@ -23,6 +23,11 @@ export const useShoppingList = () => {
             id: id,
             name: `Mock product id: ${id}`,
             price: 5000,
+            category: {
+                id: "1",
+                name: 'Test added category',
+                products: []
+            },
         };
 
         dispatchShoppingList(addProduct(product));
@@ -33,6 +38,11 @@ export const useShoppingList = () => {
             id: id,
             name: `Mock product id: ${id}`,
             price: 5000,
+            category: {
+                id: "1",
+                name: 'Test added category',
+                products: []
+            },
         };
 
         dispatchShoppingList(removeProduct(product));
@@ -43,7 +53,11 @@ export const useShoppingList = () => {
             id: id,
             name: `Mock product id: ${id}`,
             price: 5000,
-        };
+            category: {
+                id: "1",
+                name: 'Test added category',
+                products: []
+            },        };
 
         dispatchShoppingList(increaseProduct(product));
     };
@@ -53,7 +67,11 @@ export const useShoppingList = () => {
             id: id,
             name: `Mock product id: ${id}`,
             price: 5000,
-        };
+            category: {
+                id: "1",
+                name: 'Test added category',
+                products: []
+            },        };
 
         dispatchShoppingList(decreaseProduct(product));
     };
@@ -68,7 +86,11 @@ export const useShoppingList = () => {
             id: id,
             name: `Mock product id: ${id}`,
             price: 5000,
-        };
+            category: {
+                id: "1",
+                name: 'Test added category',
+                products: []
+            },        };
 
         dispatchShoppingList(checkProduct(product));
     };
@@ -78,7 +100,11 @@ export const useShoppingList = () => {
             id: id,
             name: `Mock product id: ${id}`,
             price: 5000,
-        };
+            category: {
+                id: "1",
+                name: 'Test added category',
+                products: []
+            },        };
 
         dispatchShoppingList(uncheckProduct(product));
     };

@@ -13,7 +13,7 @@ export class ProductCategoryResolver {
   ) {}
 
   @Query(() => [ProductCategory], {
-    name: 'findProductCategories',
+    name: 'productCategories',
     description: 'Find all categories with his data',
   })
   findAll() {
@@ -21,7 +21,7 @@ export class ProductCategoryResolver {
   }
 
   @Query(() => ProductCategory, {
-    name: 'findProductCategory',
+    name: 'productCategory',
     description: 'Find all products of one category',
   })
   findOne(@Args() getProductCategoryArgs: GetProductCategoryArgs) {

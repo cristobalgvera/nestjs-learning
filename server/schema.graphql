@@ -100,20 +100,20 @@ type ProductCategory {
 }
 
 type Query {
-  """Find all categories with his data"""
-  findProductCategories: [ProductCategory!]!
-
-  """Find all products of one category"""
-  findProductCategory(
-    """Category ID"""
-    id: ID!
-  ): ProductCategory!
-
   """Find one product"""
   product(
     """Product ID"""
     id: ID!
   ): Product!
+
+  """Find all categories with his data"""
+  productCategories: [ProductCategory!]!
+
+  """Find all products of one category"""
+  productCategory(
+    """Category ID"""
+    id: ID!
+  ): ProductCategory!
 
   """Find all products from database"""
   products: [Product!]!

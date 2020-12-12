@@ -1,0 +1,12 @@
+query ProductCategories {
+    productCategories {
+        id
+        name
+        products {
+            id
+            name
+            measure
+            price
+        }
+    }
+}
